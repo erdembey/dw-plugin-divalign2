@@ -10,7 +10,7 @@
  * Because of the way picker buttons work in DokuWiki, the align buttons
  * can not be used with selected text.
  */
-
+/*
 if(window.toolbar!=undefined){
   var align_da2_arr = new Array(); 
   align_da2_arr['#;;\nParagraph\n#;;\n']    = 'pleft.png';
@@ -24,5 +24,5 @@ if(window.toolbar!=undefined){
                     "list" : align_da2_arr,
                     "icobase" : "../plugins/divalign2/images"};
   }
-
+*/
 /* end of divalign2/script.js */

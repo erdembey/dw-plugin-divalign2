@@ -14,7 +14,10 @@ require_once(DOKU_PLUGIN. 'divalign2/common.php'); // for common functions
 class action_plugin_divalign2 extends DokuWiki_Action_Plugin {
 
 
-function register(&$controller) {
+function register(Doku_Event_Handler $controller){
+    //fix toolbar
+    $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'divalign_toolbar', array ());
+
     // detect DokuWiki version
     $v= file_get_contents(DOKU_INC. 'VERSION');
     if ($v===false) return;
@@ -26,7 +29,7 @@ function register(&$controller) {
         // temporarily dropping the stack-para support for Lemming and below
         //$res= $controller->register_hook('TPL_CONTENT_DISPLAY', 'BEFORE', $this, 'fix_par_stack', array ());
         }
-    if (0) $res= $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'divalign_toolbar', array ());
+    //if (0) $res= $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'divalign_toolbar', array ());
 
     }
 
@@ -34,23 +37,42 @@ function fix_par_stack (&$event, $param) {
     DW_common_divalign2::FixRenderStack($event->data, 0);
     }
 
-function divalign_toolbar(& $event, $param) {
-        $icobase = '../../plugins/divalign2/images';
-        $btn = array (
+function divalign_toolbar(&$event, $param) {
+        $event->data[] = array (
             'type' => 'picker',
             'title' => 'Alignment',
-            //'key' => 'a',
-            'icobase' => $icobase,
-            'list' => array (
-                '#;;\nParagraph\n#;;\n' => 'pleft.png',
-                ';#;\nParagraph\n;#;\n' => 'pcenter.png',
-                ';;#\nParagraph\n;;#\n' => 'pright.png',
-                '###\nParagraph\n###\n' => 'pjustify.png',
-            ),
-            'block' => 'false',
-        );
-        $event->data[]= $btn;
-    }
+            'icon' => '../../plugins/divalign2/images/pleft.png',
+            'list' => array(
+                array(
+                    'type'   => 'format',
+                    'title'  => 'Left align',
+                    'icon'   => '../../plugins/divalign2/images/pleft.png',
+                    'open'   => '#;;\n',
+                    'close'  => '\n#;;\n',
+                ),
+                array(
+                    'type'   => 'format',
+                    'title'  => 'Center align',
+                    'icon'   => '../../plugins/divalign2/images/pcenter.png',
+                    'open'   => ';#;\n',
+                    'close'  => '\n;#;\n',
+                ),
+                array(
+                    'type'   => 'format',
+                    'title'  => 'Right align',
+                    'icon'   => '../../plugins/divalign2/images/pright.png',
+                    'open'   => ';;#\n',
+                    'close'  => '\n;;#\n',
+                ),
+                array(
+                    'type'   => 'format',
+                    'title'  => 'Justify',
+                    'icon'   => '../../plugins/divalign2/images/pjustify.png',
+                    'open'   => '###\n',
+                    'close'  => '\n###\n', 
+                ),
+            )
+        );  
 
 }
 //... and that's all
